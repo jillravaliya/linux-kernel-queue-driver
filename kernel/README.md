@@ -1,10 +1,12 @@
-# Kernel Module – Current State
+# Current State
 
-This folder contains my kernel-space work for this project.
+> *This folder contains my kernel-space work for this project.*
 
 Right now this is just a **minimal kernel module**.  
 Nothing fancy. No driver yet. This stage was only about getting comfortable
 working inside kernel space without breaking the system.
+
+---
 
 ## What I Actually Did
 
@@ -15,8 +17,10 @@ working inside kernel space without breaking the system.
 - Removed it with `rmmod`
 - Verified execution using `dmesg`
 
-The module prints a message when it is loaded and another when it is removed.
-That’s it — and that’s intentional.
+> *The module prints a message when it is loaded and another when it is removed.
+That’s it — and that’s intentional.*
+
+---
 
 ## Why This Exists
 
@@ -34,7 +38,10 @@ I wanted to make sure I can:
 
 I hit real issues here (compile warnings treated as errors, module already
 loaded errors, permission issues with `dmesg`) and fixed them step by step.
-This folder exists because of that learning.
+
+> *This folder exists because of that learning.*
+
+---
 
 ## Files
 
@@ -47,6 +54,8 @@ This folder exists because of that learning.
 - `.gitignore`  
   Keeps build artifacts out of git.
 
+  ---
+
 ## What’s Next
 
 This module is the base.
@@ -57,4 +66,4 @@ Next steps will build on this:
 - add a real kernel interface
 - slowly move toward a queue-based driver
 
-This README will change as the kernel code grows.
+> *This README will change as the kernel code grows.*
