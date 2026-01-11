@@ -99,4 +99,3 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("JILL");
 MODULE_DESCRIPTION("my first circular queue driver");
 
-

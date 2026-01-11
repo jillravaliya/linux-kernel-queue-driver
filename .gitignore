@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *.o
 *.ko
 *.mod.c
@@ -6,3 +7,6 @@
 *.order
 .modules.order
 
+=======
+.localized
+>>>>>>> 5299e9fa39fe29b47314fd07483d8a2f09e818e7
