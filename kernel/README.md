@@ -1,69 +1,68 @@
-# Current State
+# Kernel Space – Character Device (Work in Progress)
 
-> *This folder contains my kernel-space work for this project.*
+> This directory contains the kernel-space implementation of the project.
 
-Right now this is just a **minimal kernel module**.  
-Nothing fancy. No driver yet. This stage was only about getting comfortable
-working inside kernel space without breaking the system.
-
----
-
-## What I Actually Did
-
-- Wrote a basic kernel module (`hello.c`)
-- Built it using a Kbuild-style Makefile
-- Compiled it against the running kernel headers
-- Loaded the module with `insmod`
-- Removed it with `rmmod`
-- Verified execution using `dmesg`
-
-> *The module prints a message when it is loaded and another when it is removed.
-That’s it — and that’s intentional.*
+The code here has moved beyond a simple "hello" module and now implements
+a **basic Linux character device**. The focus so far has been on getting the
+device lifecycle correct before adding any queue logic or IOCTL handling.
 
 ---
 
-## Why This Exists
+## Current State
 
-Before touching:
-- character devices
-- major/minor numbers
-- IOCTLs
-- queues
+*What is implemented right now:*
 
-I wanted to make sure I can:
-- build kernel code correctly
-- load and unload modules safely
-- read kernel logs properly
-- recover from common mistakes without panicking
+- Character device registration using `alloc_chrdev_region`
+- `cdev` initialization and registration
+- Device class and device node creation (`/dev/jill`)
+- Basic file operations:
+  - `open`
+  - `release`
+- Proper cleanup on module unload
 
-I hit real issues here (compile warnings treated as errors, module already
-loaded errors, permission issues with `dmesg`) and fixed them step by step.
+> At this stage, the device does not yet expose any functionality beyond
+being opened and closed.
 
-> *This folder exists because of that learning.*
+---
+
+## What I Did (Step by Step)
+
+- Started with a minimal kernel module to understand init/exit flow
+- Converted the module into a character device
+- Registered a dynamic major number
+- Created a device class and device node
+- Verified device behavior using:
+  - `insmod` / `rmmod`
+  - `/dev/jill`
+  - `dmesg`
+
+*During this phase I hit real issues such as:*
+- name conflicts with existing kernel symbols
+- incorrect cleanup order causing errors
+- permission issues when testing the device
+
+> Each issue was fixed incrementally before moving forward.
 
 ---
 
 ## Files
 
 - `hello.c`  
-  Minimal kernel module used only to understand the module lifecycle.
+  Kernel module implementing a basic character device with open/release handlers.
 
 - `Makefile`  
-  Kbuild Makefile used to build against the current kernel.
+  Kbuild-style Makefile for building against the running kernel.
 
 - `.gitignore`  
-  Keeps build artifacts out of git.
+  Excludes generated build artifacts.
 
-  ---
+---
 
 ## What’s Next
 
-This module is the base.
+The next steps will extend this driver with:
+- IOCTL support
+- a dynamically sized circular queue
+- blocking behavior using wait queues
 
-Next steps will build on this:
-- turn this into a character device
-- register device numbers
-- add a real kernel interface
-- slowly move toward a queue-based driver
-
-> *This README will change as the kernel code grows.*
+> This README will evolve as new functionality is added.ø
