@@ -45,11 +45,11 @@ These are intentional and will be implemented in the next phase.
 
 ---
 
-## Validation Done
+## Additional Notes from Implementation
 
-- Module loads and unloads cleanly
-- IOCTL calls are received and logged via `printk`
-- Device remains stable under invalid IOCTL commands
+- This phase required several full rebuild and reload cycles due to minor but blocking kernel-level mistakes
+- Small typos in kernel symbols caused failures that were non-obvious from the first compiler error line
+- This reinforced the importance of reading kernel build errors top-down instead of trusting the first highlighted line
 
 ---
 
