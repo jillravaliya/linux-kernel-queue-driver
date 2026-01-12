@@ -1,68 +1,62 @@
-# Kernel Space – Character Device (Work in Progress)
+IOCTL Infrastructure & Queue Skeleton (Work in Progress)
 
-> This directory contains the kernel-space implementation of the project.
+> This phase introduces the IOCTL control path and the core data structures
+required for a dynamic circular queue.
 
-The code here has moved beyond a simple "hello" module and now implements
-a **basic Linux character device**. The focus so far has been on getting the
-device lifecycle correct before adding any queue logic or IOCTL handling.
-
----
-
-## Current State
-
-*What is implemented right now:*
-
-- Character device registration using `alloc_chrdev_region`
-- `cdev` initialization and registration
-- Device class and device node creation (`/dev/jill`)
-- Basic file operations:
-  - `open`
-  - `release`
-- Proper cleanup on module unload
-
-> At this stage, the device does not yet expose any functionality beyond
-being opened and closed.
+The focus here was on **setting up a stable kernel–user interface**, not on
+implementing queue logic yet.
 
 ---
 
-## What I Did (Step by Step)
+## What Was Added in This Phase
 
-- Started with a minimal kernel module to understand init/exit flow
-- Converted the module into a character device
-- Registered a dynamic major number
-- Created a device class and device node
-- Verified device behavior using:
-  - `insmod` / `rmmod`
-  - `/dev/jill`
-  - `dmesg`
+- IOCTL command definitions using `_IOW` and `_IOR`
+  - `SET_SIZE_OF_QUEUE`
+  - `PUSH_DATA`
+  - `POP_DATA`
+- Shared data structure for IOCTL communication (`struct queue_data`)
+- IOCTL handler function (`unlocked_ioctl`)
+- Command routing using `switch-case`
+- Circular queue metadata structure (no memory allocation yet)
 
-*During this phase I hit real issues such as:*
-- name conflicts with existing kernel symbols
-- incorrect cleanup order causing errors
-- permission issues when testing the device
-
-> Each issue was fixed incrementally before moving forward.
+At this stage, IOCTL calls reach the kernel successfully but do not yet
+perform any real operations.
 
 ---
 
-## Files
+## Problems I Faced During This Phase
 
-- `hello.c`  
-  Kernel module implementing a basic character device with open/release handlers.
-
-- `Makefile`  
-  Kbuild-style Makefile for building against the running kernel.
-
-- `.gitignore`  
-  Excludes generated build artifacts.
+- Broke the build by misspelling kernel APIs (`class_destory` instead of `class_destroy`)
+- Used an incorrect macro name (`THIS_MODULES` instead of `THIS_MODULE`)
+- Misread compiler output pointing to kernel header files, not my own code
+- Had warnings treated as errors, which forced fixing even unused variables
+- Wasted time due to simple command mistakes (`insomd` instead of `insmod`)
 
 ---
 
-## What’s Next
+## Current Limitations
 
-The next steps will extend this driver with:
-- IOCTL support
-- a dynamically sized circular queue
-- blocking behavior using wait queues
+- No queue memory allocation (`kmalloc`) yet
+- No actual push or pop logic implemented
+- No blocking or synchronization mechanisms
+- IOCTL handlers currently log requests only
 
-> This README will evolve as new functionality is added.ø
+These are intentional and will be implemented in the next phase.
+
+---
+
+## Validation Done
+
+- Module loads and unloads cleanly
+- IOCTL calls are received and logged via `printk`
+- Device remains stable under invalid IOCTL commands
+
+---
+
+## Next Step
+
+Implement dynamic queue allocation and core queue operations
+(`SET_SIZE_OF_QUEUE`, `PUSH_DATA`, `POP_DATA`), followed by blocking behavior.
+
+
+> This README will evolve as new functionality is added.
